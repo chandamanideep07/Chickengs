@@ -1,6 +1,14 @@
-let tickets = global.tickets || [];
-global.tickets = tickets;
+import { Redis } from "@upstash/redis";
 
-export default function handler(req, res) {
-  res.status(200).json(global.tickets);
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN
+});
+
+export default async function handler(req, res) {
+  // Get all tickets from Redis list
+  const data = await redis.lrange("tickets", 0, -1);
+  const tickets = data.map(t => JSON.parse(t));
+
+  return res.status(200).json(tickets);
 }

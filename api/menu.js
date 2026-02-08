@@ -1,12 +1,11 @@
 export default function handler(req, res) {
-   res.status(200).json({
-     items: [
-       { id: 1, name: "Chicken Garlic Starter (GS)", price: 12.99 },
-       { id: 2, name: "Chicken GS Boneless", price: 14.49 },
-       { id: 3, name: "Chicken GS Combo", price: 16.75 },
-       { id: 4, name: "Chicken GS Family Pack", price: 24.99 },
-       { id: 5, name: "Chicken GS Special Masala", price: 13.99 },
-       { id: 6, name: "Chicken GS Bucket (Party Pack)", price: 32.99 }
-     ]
-   });
- }
+  const menu = [
+    { name: "Chicken GS Small", price: 10.99 },
+    { name: "Chicken GS Medium", price: 14.99 },
+    { name: "Chicken GS Family Pack", price: 24.99 },
+    { name: "Spicy Chicken Wings", price: 9.99 },
+    { name: "Fries", price: 3.99 }
+  ];
+
+  res.status(200).json(menu);
+}

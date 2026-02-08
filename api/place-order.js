@@ -1,9 +1,14 @@
-let tickets = global.tickets || [];
-global.tickets = tickets;
+import { Redis } from "@upstash/redis";
 
-export default function handler(req, res) {
-  if (req.method !== "POST")
-    return res.status(405).json({ error: "Only POST allowed" });
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN
+});
+
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
 
   const { item, quantity, extras } = req.body;
 
@@ -12,12 +17,13 @@ export default function handler(req, res) {
     item,
     quantity,
     extras,
-    time: new Date().toLocaleString()
+    time: new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" })
   };
 
-  tickets.push(ticket);
+  // Push ticket to Redis list
+  await redis.lpush("tickets", JSON.stringify(ticket));
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     ticket
   });
